@@ -35,7 +35,7 @@
   width: 100%;
   border-radius: calc(var(--r-l) - 10px);
   overflow: hidden;
-  background: var(--ink);
+  background: var(--bg);
   box-shadow:
     0 0 0 1px var(--line),
     var(--shadow);
@@ -45,7 +45,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 30%, rgb(244 235 221 / 0.05) 50%, transparent 70%) var(--ink-2);
+  background: linear-gradient(110deg, transparent 30%, rgb(var(--text-rgb) / 0.05) 50%, transparent 70%) var(--surface);
   background-size: 250% 100%;
   animation: keepsake-shimmer 1.6s linear infinite;
   transition: opacity 0.4s var(--ease);
@@ -96,7 +96,7 @@
 .keepsake__status,
 .storyfile__status {
   font-size: 14px;
-  color: var(--cream-2);
+  color: var(--text-2);
   min-height: 1.4em;
 }
 .storyfile__status.is-error {
@@ -111,7 +111,7 @@
   background:
     radial-gradient(120% 140% at 0% 0%, var(--a-soft), transparent 55%),
     radial-gradient(120% 140% at 100% 100%, var(--b-soft), transparent 55%),
-    var(--ink-2);
+    var(--surface);
 }
 .storyfile__intro {
   --gap: 10px;
@@ -140,7 +140,7 @@
   padding: 12px 14px;
   border-radius: var(--r-m);
   border: 1px solid var(--line);
-  background: rgb(244 235 221 / 0.03);
+  background: rgb(var(--text-rgb) / 0.03);
   cursor: pointer;
   transition: border-color 0.2s;
 }

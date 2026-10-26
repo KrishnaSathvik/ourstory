@@ -4,7 +4,7 @@ import { PLATFORM_LABEL } from '../../core/types'
 import { DAY, monthStart } from '../../core/time'
 import type { Pair, Story } from '../../analysis/story'
 import { WEEKDAYS, fmtDate, fmtDuration, fmtHour, fmtMonth, fmtNum, fmtPct, fmtShortDate } from '../../analysis/format'
-import { CountUp, PlatformMark, SplitBar, platformColor } from '../shared'
+import { CountUp, PlatformMark, SplitBar, platformColor, platformInk } from '../shared'
 
 export type Tone = 'a' | 'b' | 'blend' | 'night'
 
@@ -169,7 +169,7 @@ export function buildSlides(s: Story): SlideDef[] {
             {s.sources.map((x, i) => (
               <span key={x.platform}>
                 {i > 0 && <em className="faint"> → </em>}
-                <span style={{ color: platformColor(x.platform) }}>{PLATFORM_LABEL[x.platform]}</span>
+                <span style={{ color: platformInk(x.platform) }}>{PLATFORM_LABEL[x.platform]}</span>
               </span>
             ))}
           </h2>
@@ -578,8 +578,8 @@ function Clock({ values, peak }: { values: number[]; peak: number }) {
     <svg viewBox={`0 0 ${size} ${size}`} className="sl-clock" role="img" aria-label={`Messages by hour, peaking at ${fmtHour(peak)}`}>
       <defs>
         <linearGradient id="clockg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ff7a59" />
-          <stop offset="1" stopColor="#8c9bff" />
+          <stop offset="0" style={{ stopColor: 'var(--a)' }} />
+          <stop offset="1" style={{ stopColor: 'var(--b)' }} />
         </linearGradient>
       </defs>
       {values.map((v, h) => {
@@ -592,7 +592,7 @@ function Clock({ values, peak }: { values: number[]; peak: number }) {
             y1={c + Math.sin(a) * r0}
             x2={c + Math.cos(a) * len}
             y2={c + Math.sin(a) * len}
-            stroke={h === peak ? '#f2c46d' : 'url(#clockg)'}
+            stroke={h === peak ? 'var(--gold)' : 'url(#clockg)'}
             strokeWidth={h === peak ? 9 : 7}
             strokeLinecap="round"
             opacity={h === peak ? 1 : 0.45 + 0.55 * (v / max)}
@@ -633,14 +633,14 @@ function Converge({ data }: { data: number[] }) {
     <svg viewBox={`-6 -6 ${w + 12} ${h + 12}`} className="sl-converge sl-in" style={{ '--i': 2 } as React.CSSProperties} role="img" aria-label="Similarity rising over time">
       <defs>
         <linearGradient id="convg" x1="0" x2="1">
-          <stop offset="0" stopColor="#ff7a59" />
-          <stop offset="1" stopColor="#8c9bff" />
+          <stop offset="0" style={{ stopColor: 'var(--a)' }} />
+          <stop offset="1" style={{ stopColor: 'var(--b)' }} />
         </linearGradient>
       </defs>
-      <line x1="0" x2={w} y1={h} y2={h} stroke="rgb(244 235 221 / .15)" />
+      <line x1="0" x2={w} y1={h} y2={h} stroke="var(--line-strong)" />
       <path d={`${d} L${w},${h} L0,${h} Z`} fill="url(#convg)" opacity="0.15" />
       <path d={d} fill="none" stroke="url(#convg)" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" className="sl-converge__line" pathLength={1} />
-      <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="6" fill="#8c9bff" />
+      <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="6" fill="var(--b)" />
     </svg>
   )
 }

@@ -5,7 +5,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  filter: blur(0.3px) saturate(1.1);
+  mix-blend-mode: multiply;
 }
 
 .splitbar__track {
@@ -25,14 +25,14 @@
   justify-content: space-between;
   margin-top: 8px;
   font-size: 14px;
-  color: var(--cream-2);
+  color: var(--text-2);
 }
 
 .platform-mark {
   display: inline-grid;
   place-items: center;
   border-radius: 7px;
-  color: var(--ink);
+  color: rgb(var(--text-rgb) / 0.82);
   font-weight: 700;
   flex: none;
   line-height: 1;
@@ -62,9 +62,9 @@
   align-items: flex-start;
   padding: 14px 16px;
   border-radius: var(--r-m);
-  background: rgb(242 196 109 / 0.08);
-  border: 1px solid rgb(242 196 109 / 0.25);
-  color: var(--cream-2);
+  background: rgb(var(--honey-rgb) / 0.08);
+  border: 1px solid rgb(var(--honey-rgb) / 0.25);
+  color: var(--text-2);
   font-size: 15px;
 }
 .note svg {
@@ -81,10 +81,19 @@
   z-index: 60;
   padding: 7px 14px;
   border-radius: 999px;
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--honey);
+  color: var(--text);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
   box-shadow: var(--shadow);
+}
+@media (max-width: 480px) {
+  .demo-ribbon {
+    font-size: 11.5px;
+    padding: 5px 11px;
+    bottom: 10px;
+  }
 }

@@ -20,24 +20,36 @@ import { DAY } from '../../core/time'
 
 // ============================================================ identity ===
 
+export type RGB = [number, number, number]
+
+/**
+ * Keepsake palette: "Paper & Ink", mirroring the site's tokens. Keepsakes
+ * are printed on warm ivory paper; marks are ink-like and multiply into it.
+ * Vivid person colours for marks and large type, -Ink variants for small text.
+ */
 export const K = {
-  ink: '#0f0b14',
-  ink2: '#17111f',
-  ink3: '#211a2c',
-  cream: '#f4ebdd',
-  cream2: '#c9bfcf',
-  cream3: '#9a90a6',
-  a: '#ff7a59',
-  mid: '#e58fc0',
-  b: '#8c9bff',
-  gold: '#f2c46d',
+  paper: '#faf4ea',
+  paper2: '#f3eadc',
+  paper3: '#eadfcf',
+  text: '#2b2130',
+  text2: '#5c4f60',
+  text3: '#76697a',
+  a: '#e2603f',
+  aInk: '#b4432a',
+  mid: '#d4709a',
+  b: '#7a78e6',
+  bInk: '#5552c4',
+  gold: '#a86a12',
+  honey: '#edb54d',
 } as const
+const TEXT_RGB: RGB = [43, 33, 48]
+const SHADOW_RGB: RGB = [110, 70, 52]
+const HONEY_RGB: RGB = [237, 181, 77]
 
 export const SERIF = `'Instrument Serif', 'Iowan Old Style', Georgia, serif`
 export const SANS = `'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif`
 export const EMOJI = `'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif`
 
-export type RGB = [number, number, number]
 const hex = (h: string): RGB => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]
 const A_RGB = hex(K.a)
 const MID_RGB = hex(K.mid)
@@ -85,27 +97,28 @@ function mulberry32(seed: number) {
 
 export const storySeed = (s: Story) => (s.totals.messages * 2654435761 + s.range.days * 40503 + s.activity.startDay) >>> 0
 
-/** Ink background with two soft person-coloured glows and a vignette. */
+/** Ivory paper with two soft person-coloured washes and a warm, aged edge. */
 export function paintBackground(ctx: CanvasRenderingContext2D, w: number, h: number, glow: { ax: number; ay: number; bx: number; by: number; r: number }) {
   ctx.save()
-  ctx.fillStyle = K.ink
+  ctx.fillStyle = K.paper
   ctx.fillRect(0, 0, w, h)
   const m = Math.max(w, h)
   const blob = (x: number, y: number, c: RGB, alpha: number) => {
     const g = ctx.createRadialGradient(x, y, 0, x, y, glow.r * m)
     g.addColorStop(0, rgba(c, alpha))
-    g.addColorStop(0.45, rgba(c, alpha * 0.35))
+    g.addColorStop(0.5, rgba(c, alpha * 0.35))
     g.addColorStop(1, rgba(c, 0))
     ctx.fillStyle = g
     ctx.fillRect(0, 0, w, h)
   }
-  ctx.globalCompositeOperation = 'lighter'
-  blob(glow.ax * w, glow.ay * h, A_RGB, 0.16)
-  blob(glow.bx * w, glow.by * h, B_RGB, 0.16)
+  ctx.globalCompositeOperation = 'multiply'
+  blob(glow.ax * w, glow.ay * h, A_RGB, 0.13)
+  blob(glow.bx * w, glow.by * h, B_RGB, 0.14)
   ctx.globalCompositeOperation = 'source-over'
-  const v = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, m * 0.75)
-  v.addColorStop(0, 'rgba(15,11,20,0)')
-  v.addColorStop(1, 'rgba(8,6,11,0.65)')
+  // Edges warm slightly, like heavy paper under a lamp.
+  const v = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.42, w / 2, h / 2, m * 0.78)
+  v.addColorStop(0, rgba(SHADOW_RGB, 0))
+  v.addColorStop(1, rgba(SHADOW_RGB, 0.055))
   ctx.fillStyle = v
   ctx.fillRect(0, 0, w, h)
   ctx.restore()
@@ -121,10 +134,12 @@ export function paintGrain(ctx: CanvasRenderingContext2D, w: number, h: number, 
   const img = tctx.createImageData(192, 192)
   const rnd = mulberry32(seed)
   for (let i = 0; i < img.data.length; i += 4) {
+    // Paper tooth: warm dark specks only (light specks read as dust on ivory).
     const v = rnd()
-    const light = v > 0.5
-    img.data[i] = img.data[i + 1] = img.data[i + 2] = light ? 255 : 0
-    img.data[i + 3] = Math.abs(v - 0.5) * 2 * 26 * strength
+    img.data[i] = 70
+    img.data[i + 1] = 48
+    img.data[i + 2] = 40
+    img.data[i + 3] = v > 0.62 ? (v - 0.62) * 2.6 * 22 * strength : 0
   }
   tctx.putImageData(img, 0, 0)
   const pattern = ctx.createPattern(tile, 'repeat')
@@ -237,7 +252,7 @@ export function drawNames(
     const left = x - (wm + wb) / 2
     ctx.textAlign = 'left'
     ctx.font = font(s2, true)
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text2
     ctx.fillText('& ', left, y + lh)
     ctx.font = font(s2)
     ctx.fillStyle = K.b
@@ -252,7 +267,7 @@ export function drawNames(
   ctx.fillText(a, cx, y)
   cx += m.wa
   ctx.font = font(size, true)
-  ctx.fillStyle = K.cream
+  ctx.fillStyle = K.text2
   ctx.fillText(amp, cx, y)
   cx += m.wm
   ctx.font = font(size)
@@ -272,13 +287,13 @@ export function drawWordmark(ctx: CanvasRenderingContext2D, x: number, y: number
   const total = orbR * 4 + gap * 0.5 + gap + tw
   let left = align === 'left' ? x : align === 'right' ? x - total : x - total / 2
   const oy = y - size * 0.3
-  ctx.globalCompositeOperation = 'lighter'
+  ctx.globalCompositeOperation = 'multiply'
   for (const [c, dx] of [
     [A_RGB, orbR],
     [B_RGB, orbR * 2.6],
   ] as const) {
     const g = ctx.createRadialGradient(left + dx, oy, 0, left + dx, oy, orbR * 3.2)
-    g.addColorStop(0, rgba(c, 0.55))
+    g.addColorStop(0, rgba(c, 0.22))
     g.addColorStop(1, rgba(c, 0))
     ctx.fillStyle = g
     ctx.fillRect(left + dx - orbR * 3.2, oy - orbR * 3.2, orbR * 6.4, orbR * 6.4)
@@ -291,7 +306,7 @@ export function drawWordmark(ctx: CanvasRenderingContext2D, x: number, y: number
   left += orbR * 3.6 + gap
   ctx.textAlign = 'left'
   ctx.textBaseline = 'alphabetic'
-  ctx.fillStyle = K.cream
+  ctx.fillStyle = K.text
   ctx.fillText('duet', left, y)
   ctx.restore()
 }
@@ -305,11 +320,11 @@ export function drawDemoMark(ctx: CanvasRenderingContext2D, x: number, y: number
   const ph = 40 * u
   const pw = tw + 36 * u
   const left = align === 'left' ? x : align === 'right' ? x - pw : x - pw / 2
-  ctx.fillStyle = K.gold
+  ctx.fillStyle = K.honey
   ctx.beginPath()
   ctx.roundRect(left, y - ph / 2, pw, ph, ph / 2)
   ctx.fill()
-  ctx.fillStyle = K.ink
+  ctx.fillStyle = K.text
   ctx.textAlign = 'left'
   ctx.textBaseline = 'middle'
   ctx.fillText(text, left + 18 * u, y + 1 * u)
@@ -317,7 +332,7 @@ export function drawDemoMark(ctx: CanvasRenderingContext2D, x: number, y: number
 }
 
 /** Tracked uppercase label. */
-export function drawEyebrow(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, size: number, color: string = K.cream3, align: CanvasTextAlign = 'left') {
+export function drawEyebrow(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, size: number, color: string = K.text3, align: CanvasTextAlign = 'left') {
   ctx.save()
   setFont(ctx, `600 ${size}px ${SANS}`, size * 0.22)
   ctx.fillStyle = color
@@ -381,7 +396,7 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
 
   // Faint guide thread along the whole spiral.
   ctx.save()
-  ctx.strokeStyle = 'rgba(244,235,221,0.07)'
+  ctx.strokeStyle = rgba(TEXT_RGB, 0.08)
   ctx.lineWidth = Math.max(1, 1.1 * u)
   ctx.beginPath()
   for (let i = 0; i <= n; i++) {
@@ -400,14 +415,14 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
   ctx.save()
   const outer = radiusOf(t0 + n * DAY) + maxLen * 0.5 + 34 * u
   setFont(ctx, `600 ${15 * u}px ${SANS}`, 2 * u)
-  ctx.fillStyle = K.cream3
+  ctx.fillStyle = K.text3
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   'JFMAMJJASOND'.split('').forEach((ch, m) => {
     const a = -Math.PI / 2 + ((m + 0.5) / 12) * Math.PI * 2
     ctx.fillText(ch, cx + Math.cos(a) * outer + u, cy + Math.sin(a) * outer)
   })
-  ctx.strokeStyle = 'rgba(244,235,221,0.10)'
+  ctx.strokeStyle = rgba(TEXT_RGB, 0.16)
   ctx.lineWidth = Math.max(1, u)
   for (let m = 0; m < 12; m++) {
     const a = -Math.PI / 2 + (m / 12) * Math.PI * 2
@@ -437,14 +452,14 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
     const len = Math.max(2.5 * u, maxLen * Math.min(1.1, Math.sqrt(total / ref)))
     const arc = (r * Math.PI * 2) / 365.2425
     const w = clamp(arc * 0.5, 1.2 * u, 3.6 * u)
-    // Amplify the share a little so balanced days still read as "who led".
-    const shareB = 0.5 + (dailyB[i] / total - 0.5) * 2
+    // Amplify the share so balanced days still read as "who led" on paper.
+    const shareB = 0.5 + (dailyB[i] / total - 0.5) * 3
     marks.push({ x0: cx + ca * (r - len / 2), y0: cy + sa * (r - len / 2), x1: cx + ca * (r + len / 2), y1: cy + sa * (r + len / 2), w, c: duetColor(shareB), n: total })
   }
 
   // Silent days: faint dots on the thread.
   ctx.save()
-  ctx.fillStyle = 'rgba(201,191,207,0.32)'
+  ctx.fillStyle = rgba(TEXT_RGB, 0.18)
   for (const [x, y] of silent) {
     ctx.beginPath()
     ctx.arc(x, y, 1.6 * u, 0, Math.PI * 2)
@@ -455,10 +470,10 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
   // Two additive passes: a wide soft glow, then the crisp core.
   ctx.save()
   ctx.lineCap = 'round'
-  ctx.globalCompositeOperation = 'lighter'
+  ctx.globalCompositeOperation = 'multiply'
   for (const m of marks) {
-    ctx.strokeStyle = rgba(m.c, 0.06)
-    ctx.lineWidth = m.w * 3.2
+    ctx.strokeStyle = rgba(m.c, 0.07)
+    ctx.lineWidth = m.w * 3
     ctx.beginPath()
     ctx.moveTo(m.x0, m.y0)
     ctx.lineTo(m.x1, m.y1)
@@ -467,8 +482,9 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
   ctx.restore()
   ctx.save()
   ctx.lineCap = 'round'
+  ctx.globalCompositeOperation = 'multiply'
   for (const m of marks) {
-    ctx.strokeStyle = rgba(m.c, 0.92)
+    ctx.strokeStyle = rgba(m.c, 0.9)
     ctx.lineWidth = m.w
     ctx.beginPath()
     ctx.moveTo(m.x0, m.y0)
@@ -504,12 +520,12 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
     const r = radiusOf(t)
     const x = cx + 10 * u
     const yy = cy - r
-    ctx.fillStyle = 'rgba(15,11,20,0.55)'
+    ctx.fillStyle = 'rgba(250,244,234,0.88)'
     const tw = ctx.measureText(String(y)).width
     ctx.beginPath()
     ctx.roundRect(x - 5 * u, yy - 13 * u, tw + 10 * u, 26 * u, 6 * u)
     ctx.fill()
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.fillText(String(y), x, yy + u)
   }
   ctx.restore()
@@ -520,11 +536,15 @@ function drawSpiral(ctx: CanvasRenderingContext2D, story: Story, cx: number, cy:
   const sx = cx + Math.cos(sa0) * r0
   const sy = cy + Math.sin(sa0) * r0
   const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 22 * u)
-  g.addColorStop(0, 'rgba(244,235,221,0.9)')
-  g.addColorStop(0.25, 'rgba(244,235,221,0.25)')
-  g.addColorStop(1, 'rgba(244,235,221,0)')
+  g.addColorStop(0, rgba(HONEY_RGB, 0.95))
+  g.addColorStop(0.3, rgba(HONEY_RGB, 0.35))
+  g.addColorStop(1, rgba(HONEY_RGB, 0))
   ctx.fillStyle = g
   ctx.fillRect(sx - 22 * u, sy - 22 * u, 44 * u, 44 * u)
+  ctx.fillStyle = K.text
+  ctx.beginPath()
+  ctx.arc(sx, sy, 2.6 * u, 0, Math.PI * 2)
+  ctx.fill()
   ctx.restore()
 }
 
@@ -534,7 +554,7 @@ function drawLegend(ctx: CanvasRenderingContext2D, story: Story, cx: number, y: 
   const text = 'each mark is a day · longer = more messages · colour = who spoke more'
   const size = fitSize(ctx, text, width, (s) => `400 ${s}px ${SANS}`, 19 * u, 12 * u)
   setFont(ctx, `400 ${size}px ${SANS}`, 0.2 * u)
-  ctx.fillStyle = K.cream2
+  ctx.fillStyle = K.text2
   ctx.textAlign = 'center'
   ctx.textBaseline = 'alphabetic'
   ctx.fillText(text, cx, y)
@@ -554,10 +574,10 @@ function drawLegend(ctx: CanvasRenderingContext2D, story: Story, cx: number, y: 
   setFont(ctx, `600 ${nameSize}px ${SANS}`, 0.5 * u)
   ctx.textBaseline = 'middle'
   ctx.textAlign = 'right'
-  ctx.fillStyle = K.a
+  ctx.fillStyle = K.aInk
   ctx.fillText(shortName(story.people[0].name), cx - bw / 2 - 14 * u, by + u)
   ctx.textAlign = 'left'
-  ctx.fillStyle = K.b
+  ctx.fillStyle = K.bInk
   ctx.fillText(shortName(story.people[1].name), cx + bw / 2 + 14 * u, by + u)
 
   const ly = by + 40 * u
@@ -566,7 +586,7 @@ function drawLegend(ctx: CanvasRenderingContext2D, story: Story, cx: number, y: 
     [
       'quiet day',
       (x) => {
-        ctx.fillStyle = 'rgba(201,191,207,0.6)'
+        ctx.fillStyle = rgba(TEXT_RGB, 0.3)
         ctx.beginPath()
         ctx.arc(x, ly, 2.4 * u, 0, Math.PI * 2)
         ctx.fill()
@@ -586,10 +606,14 @@ function drawLegend(ctx: CanvasRenderingContext2D, story: Story, cx: number, y: 
       'first message',
       (x) => {
         const g = ctx.createRadialGradient(x, ly, 0, x, ly, 10 * u)
-        g.addColorStop(0, 'rgba(244,235,221,0.95)')
-        g.addColorStop(1, 'rgba(244,235,221,0)')
+        g.addColorStop(0, rgba(HONEY_RGB, 0.95))
+        g.addColorStop(1, rgba(HONEY_RGB, 0))
         ctx.fillStyle = g
         ctx.fillRect(x - 10 * u, ly - 10 * u, 20 * u, 20 * u)
+        ctx.fillStyle = K.text
+        ctx.beginPath()
+        ctx.arc(x, ly, 2 * u, 0, Math.PI * 2)
+        ctx.fill()
       },
     ],
   ]
@@ -599,7 +623,7 @@ function drawLegend(ctx: CanvasRenderingContext2D, story: Story, cx: number, y: 
   ctx.textAlign = 'left'
   items.forEach(([t, glyph], i) => {
     glyph(x + 6 * u)
-    ctx.fillStyle = K.cream3
+    ctx.fillStyle = K.text3
     ctx.fillText(t, x + 20 * u, ly + u)
     x += widths[i] + gap
   })
@@ -617,13 +641,13 @@ function drawStatTriplet(ctx: CanvasRenderingContext2D, story: Story, cx: number
   stats.forEach(([value, label], i) => {
     const x = cx - width / 2 + col * (i + 0.5)
     setFont(ctx, `400 ${numSize}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text
     ctx.textAlign = 'center'
     ctx.textBaseline = 'alphabetic'
     ctx.fillText(value, x, y)
-    drawEyebrow(ctx, label, x, y + numSize * 0.42, Math.max(11 * u, numSize * 0.2), K.cream3, 'center')
+    drawEyebrow(ctx, label, x, y + numSize * 0.42, Math.max(11 * u, numSize * 0.2), K.text3, 'center')
     if (i > 0) {
-      ctx.strokeStyle = 'rgba(244,235,221,0.14)'
+      ctx.strokeStyle = rgba(TEXT_RGB, 0.14)
       ctx.lineWidth = Math.max(1, u)
       ctx.beginPath()
       ctx.moveTo(cx - width / 2 + col * i, y - numSize * 0.75)
@@ -660,8 +684,8 @@ export function drawFingerprint(ctx: CanvasRenderingContext2D, story: Story, opt
 
   // A soft halo behind the spiral.
   const halo = ctx.createRadialGradient(W / 2, cy, R * 0.1, W / 2, cy, R * 1.25)
-  halo.addColorStop(0, 'rgba(229,143,192,0.10)')
-  halo.addColorStop(1, 'rgba(229,143,192,0)')
+  halo.addColorStop(0, rgba(MID_RGB, 0.07))
+  halo.addColorStop(1, rgba(MID_RGB, 0))
   ctx.fillStyle = halo
   ctx.fillRect(0, 0, W, H)
 
@@ -671,25 +695,25 @@ export function drawFingerprint(ctx: CanvasRenderingContext2D, story: Story, opt
   const inner = W - 2 * 96 * u
   if (poster) {
     // Poster is laid out on a 1080 × 1440 grid (u = W / 1080).
-    drawEyebrow(ctx, 'Our fingerprint', W / 2, 78 * u, 18 * u, K.cream3, 'center')
+    drawEyebrow(ctx, 'Our fingerprint', W / 2, 78 * u, 18 * u, K.text3, 'center')
     if (story.demo) drawDemoMark(ctx, W / 2, 122 * u, u * 0.9, 'center')
     const wraps = namesWrap(ctx, story, 112 * u, inner)
     const n = drawNames(ctx, story, W / 2, (wraps ? 948 : 978) * u, 112 * u, inner, 'center', { wrap: true })
     const ry = wraps ? 948 * u + n.extra + 50 * u : 1040 * u
     setFont(ctx, `italic 400 ${36 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.textAlign = 'center'
     ctx.fillText(range, W / 2, ry)
     drawStatTriplet(ctx, story, W / 2, ry + (wraps ? 94 : 104) * u, u, Math.min(inner, 720 * u), wraps ? 52 * u : 60 * u)
     drawLegend(ctx, story, W / 2, H - 196 * u, u * 0.9, inner)
     drawWordmark(ctx, W / 2, H - 46 * u, 30 * u, 'center')
   } else {
-    drawEyebrow(ctx, 'Our fingerprint', W / 2, 150 * u, 20 * u, K.cream3, 'center')
+    drawEyebrow(ctx, 'Our fingerprint', W / 2, 150 * u, 20 * u, K.text3, 'center')
     const y0 = namesWrap(ctx, story, 104 * u, inner) ? 222 * u : 262 * u
     const n = drawNames(ctx, story, W / 2, y0, 104 * u, inner, 'center', { wrap: true })
     const base = y0 + n.extra
     setFont(ctx, `italic 400 ${34 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.textAlign = 'center'
     ctx.fillText(range, W / 2, base + n.size * 0.25 + 30 * u)
     drawStatTriplet(ctx, story, W / 2, H * 0.79, u, Math.min(inner, 820 * u), 76 * u)

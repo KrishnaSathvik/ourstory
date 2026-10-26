@@ -8,7 +8,7 @@
   text-wrap: balance;
 }
 .play__title em {
-  color: var(--cream-2);
+  color: var(--text-2);
 }
 .play__lead {
   max-width: 540px;
@@ -62,10 +62,10 @@
   flex-wrap: wrap;
 }
 .qhead__who--a {
-  border-color: rgb(255 122 89 / 0.5);
+  border-color: rgb(var(--a-rgb) / 0.5);
 }
 .qhead__who--b {
-  border-color: rgb(140 155 255 / 0.5);
+  border-color: rgb(var(--b-rgb) / 0.5);
 }
 .play__q {
   font-size: clamp(34px, 6vw, 58px);
@@ -94,7 +94,7 @@
   padding: 16px 20px;
   border-radius: var(--r-l);
   border: 1px solid var(--line-strong);
-  background: var(--ink-2);
+  background: var(--surface);
   cursor: pointer;
   text-align: left;
   font-size: 19px;
@@ -113,7 +113,7 @@
 }
 .qopt:not([disabled]):hover {
   transform: translateY(-2px);
-  border-color: var(--cream);
+  border-color: var(--text);
 }
 .qopt--a:not([disabled]):hover {
   background: var(--a-soft);
@@ -128,13 +128,13 @@
 }
 .qopt.is-right {
   border-color: var(--gold);
-  background: rgb(242 196 109 / 0.12);
+  background: rgb(var(--honey-rgb) / 0.12);
 }
 .qopt.is-right svg {
   color: var(--gold);
 }
 .qopt.is-wrong {
-  border-color: rgb(255 143 143 / 0.5);
+  border-color: rgb(var(--danger-rgb) / 0.5);
 }
 .qopt.is-dim {
   opacity: 0.4;
@@ -150,11 +150,11 @@
 }
 .qopt__tag--a {
   color: var(--a);
-  border-color: rgb(255 122 89 / 0.5);
+  border-color: rgb(var(--a-rgb) / 0.5);
 }
 .qopt__tag--b {
   color: var(--b);
-  border-color: rgb(140 155 255 / 0.5);
+  border-color: rgb(var(--b-rgb) / 0.5);
 }
 .qreveal {
   margin-top: 26px;
@@ -165,7 +165,7 @@
   flex-wrap: wrap;
   padding: 20px 22px;
   border-radius: var(--r-l);
-  background: var(--ink-2);
+  background: var(--surface);
   border: 1px solid var(--line);
   animation: rise 0.5s var(--ease) both;
 }
@@ -186,10 +186,10 @@
   border: 1px solid var(--line);
 }
 .handoff--a {
-  background: radial-gradient(ellipse at 0% 100%, rgb(255 122 89 / 0.22), transparent 60%), var(--ink-2);
+  background: radial-gradient(ellipse at 0% 100%, rgb(var(--a-rgb) / 0.22), transparent 60%), var(--surface);
 }
 .handoff--b {
-  background: radial-gradient(ellipse at 100% 100%, rgb(140 155 255 / 0.24), transparent 60%), var(--ink-2);
+  background: radial-gradient(ellipse at 100% 100%, rgb(var(--b-rgb) / 0.24), transparent 60%), var(--surface);
 }
 
 .scores {

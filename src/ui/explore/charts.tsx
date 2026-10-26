@@ -289,7 +289,7 @@ export function Barcode({ story }: { story: Story }) {
       >
         <svg viewBox={`0 0 ${Math.max(1, n)} ${H}`} preserveAspectRatio="none" width="100%" height={H} aria-hidden="true">
           {paths.map((d, k) => (d ? <path key={k} d={d} fill={blendColor(k / (BUCKETS - 1))} /> : null))}
-          {active != null && <rect x={active - Math.max(0.5, n / width)} width={Math.max(1, (2 * n) / width)} y={0} height={H} fill="var(--cream)" opacity={0.9} />}
+          {active != null && <rect x={active - Math.max(0.5, n / width)} width={Math.max(1, (2 * n) / width)} y={0} height={H} fill="var(--text)" opacity={0.9} />}
         </svg>
         <div className="ex-barcode__years" aria-hidden="true">
           {years.map(({ i, y }) => (
@@ -547,8 +547,8 @@ export function ConvergenceChart({ story }: { story: Story }) {
         <svg width={width} height={H} viewBox={`0 0 ${width} ${H}`} aria-hidden="true">
           <defs>
             <linearGradient id="ex-conv-fill" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stopColor="#e58fc0" stopOpacity="0.35" />
-              <stop offset="1" stopColor="#e58fc0" stopOpacity="0" />
+              <stop offset="0" style={{ stopColor: 'var(--mid)', stopOpacity: 0.3 }} />
+              <stop offset="1" style={{ stopColor: 'var(--mid)', stopOpacity: 0 }} />
             </linearGradient>
             <linearGradient id="ex-conv-line" x1="0" x2="1" y1="0" y2="0">
               <stop offset="0" stopColor="var(--a)" />
@@ -579,7 +579,7 @@ export function ConvergenceChart({ story }: { story: Story }) {
           {active != null && cur && (
             <g>
               <line x1={x(active)} x2={x(active)} y1={padT} y2={H - padB} stroke="var(--line-strong)" />
-              <circle cx={x(active)} cy={y(cur.words)} r={4.5} fill="var(--cream)" />
+              <circle cx={x(active)} cy={y(cur.words)} r={4.5} fill="var(--text)" />
               <circle cx={x(active)} cy={y(cur.emoji)} r={4} fill="var(--gold)" />
             </g>
           )}

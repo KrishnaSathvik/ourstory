@@ -4,25 +4,53 @@
 
 /* ------------------------------------------------------------ tokens --- */
 :root {
-  --ink: #0f0b14; /* after-hours plum black */
-  --ink-2: #17111f;
-  --ink-3: #211a2c;
-  --ink-4: #2e253b;
-  --line: rgb(244 235 221 / 0.12);
-  --line-strong: rgb(244 235 221 / 0.24);
-  --cream: #f4ebdd;
-  --cream-2: #c9bfcf; /* secondary text, 9.6:1 on ink */
-  --cream-3: #9a90a6; /* tertiary text, 5.6:1 on ink */
+  /*
+   * "Paper & Ink": Duet's light, editorial theme.
+   * Warm ivory paper, aubergine ink, and the two people as Ember (coral) and
+   * Tide (lavender). Components use ROLE tokens only (--bg, --surface,
+   * --text, --line, --a…), never raw colours. *-rgb channels exist for tints:
+   * rgb(var(--text-rgb) / 0.06). Contrast ratios are measured on --bg.
+   */
+  --bg: #faf5ec; /* ivory paper */
+  --bg-rgb: 250 245 236;
+  --surface: #fffcf6; /* lifted card */
+  --surface-rgb: 255 252 246;
+  --surface-2: #f3ebdf; /* recessed: inputs, tracks */
+  --surface-3: #e9dfd0;
+  --text: #2b2130; /* aubergine ink, 14.2:1 */
+  --text-rgb: 43 33 48;
+  --text-2: #5c4f60; /* 7.1:1 */
+  --text-3: #76697a; /* 4.8:1 */
+  --line: rgb(var(--text-rgb) / 0.1);
+  --line-strong: rgb(var(--text-rgb) / 0.2);
 
-  --a: #ff7a59; /* Ember: person A */
-  --a-soft: rgb(255 122 89 / 0.16);
-  --b: #8c9bff; /* Tide: person B */
-  --b-soft: rgb(140 155 255 / 0.16);
-  --blend: linear-gradient(100deg, var(--a), #e58fc0 50%, var(--b));
-  --gold: #f2c46d;
-  --ok: #7fd6a4;
-  --warn: #f2c46d;
-  --danger: #ff8f8f;
+  /* People. Vivid for marks & display type (≥3:1), -ink for small text (≥5:1). */
+  --a: #e2603f; /* Ember */
+  --a-rgb: 226 96 63;
+  --a-ink: #b4432a;
+  --a-ink-rgb: 180 67 42;
+  --a-soft: rgb(var(--a-rgb) / 0.12);
+  --b: #7a78e6; /* Tide */
+  --b-rgb: 122 120 230;
+  --b-ink: #5552c4;
+  --b-ink-rgb: 85 82 196;
+  --b-soft: rgb(var(--b-rgb) / 0.12);
+  --mid: #d4709a; /* the duet rose between them */
+  --mid-rgb: 212 112 154;
+  --blend: linear-gradient(100deg, var(--a), var(--mid) 50%, var(--b));
+  /* Filled CTAs: the same journey, deep enough for white text (≥5:1). */
+  --blend-deep: linear-gradient(100deg, var(--a-ink), #a3466f 50%, var(--b-ink));
+  --on-accent: #fffaf3;
+
+  --honey: #edb54d; /* highlight fills (ink text on it, 7:1) */
+  --honey-rgb: 237 181 77;
+  --gold: #a86a12; /* amber for icons, focus rings, small accents (4.1:1) */
+  --ok: #2a7d52;
+  --ok-rgb: 42 125 82;
+  --warn: #a86a12;
+  --danger: #bf3f38;
+  --danger-rgb: 191 63 56;
+  --shadow-rgb: 92 58 48; /* warm, never grey */
 
   --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
   --sans: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
@@ -30,11 +58,12 @@
   --r-s: 10px;
   --r-m: 18px;
   --r-l: 28px;
-  --shadow: 0 20px 60px -20px rgb(0 0 0 / 0.6);
+  --shadow-s: 0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 14px -6px rgb(var(--shadow-rgb) / 0.12);
+  --shadow: 0 2px 6px rgb(var(--shadow-rgb) / 0.05), 0 24px 60px -28px rgb(var(--shadow-rgb) / 0.32);
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --max: 1160px;
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 *,
@@ -50,8 +79,12 @@ html {
 
 body {
   margin: 0;
-  background: var(--ink);
-  color: var(--cream);
+  /* Paper, lit from the corners by the two people. */
+  background:
+    radial-gradient(1100px 700px at 92% -8%, rgb(var(--b-rgb) / 0.09), transparent 62%),
+    radial-gradient(900px 640px at -12% 18%, rgb(var(--a-rgb) / 0.07), transparent 60%),
+    var(--bg);
+  color: var(--text);
   font-family: var(--sans);
   font-size: 17px;
   line-height: 1.55;
@@ -68,13 +101,14 @@ body::after {
   inset: 0;
   pointer-events: none;
   z-index: 100;
-  opacity: 0.06;
+  opacity: 0.09;
+  mix-blend-mode: multiply; /* paper tooth, not static */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: var(--a);
-  color: var(--ink);
+  color: var(--bg);
 }
 
 h1,
@@ -137,24 +171,34 @@ button {
   font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--cream-3);
+  color: var(--text-3);
   font-weight: 600;
 }
 
 .muted {
-  color: var(--cream-2);
+  color: var(--text-2);
 }
 .faint {
-  color: var(--cream-3);
+  color: var(--text-3);
 }
 .tnum {
   font-variant-numeric: tabular-nums;
 }
 
 .a {
-  color: var(--a);
+  color: var(--a-ink);
 }
 .b {
+  color: var(--b-ink);
+}
+.display .a,
+.display.a,
+.display .b,
+.display.b {
+  color: var(--a);
+}
+.display .b,
+.display.b {
   color: var(--b);
 }
 .blend-text {
@@ -166,8 +210,8 @@ button {
 
 /* ----------------------------------------------------------- buttons --- */
 .btn {
-  --bg: var(--cream);
-  --fg: var(--ink);
+  --btn-bg: var(--text);
+  --btn-fg: var(--surface);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -176,8 +220,8 @@ button {
   padding: 0 22px;
   border-radius: 999px;
   border: 0;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
@@ -200,16 +244,17 @@ button {
   transform: none;
 }
 .btn--ghost {
-  --bg: transparent;
-  --fg: var(--cream);
+  --btn-bg: transparent;
+  --btn-fg: var(--text);
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 .btn--ghost:hover {
-  --bg: rgb(244 235 221 / 0.06);
+  --btn-bg: rgb(var(--text-rgb) / 0.06);
 }
 .btn--blend {
-  background: var(--blend);
-  color: var(--ink);
+  background: var(--blend-deep);
+  color: var(--on-accent);
+  box-shadow: 0 10px 24px -12px rgb(var(--a-rgb) / 0.55), 0 2px 6px rgb(var(--shadow-rgb) / 0.08);
 }
 .btn--small {
   min-height: 36px;
@@ -217,9 +262,9 @@ button {
   font-size: 14px;
 }
 .btn--danger {
-  --bg: transparent;
-  --fg: var(--danger);
-  box-shadow: inset 0 0 0 1px rgb(255 143 143 / 0.4);
+  --btn-bg: transparent;
+  --btn-fg: var(--danger);
+  box-shadow: inset 0 0 0 1px rgb(var(--danger-rgb) / 0.4);
 }
 
 .icon-btn {
@@ -229,17 +274,17 @@ button {
   height: 44px;
   border-radius: 999px;
   border: 0;
-  background: rgb(244 235 221 / 0.08);
+  background: rgb(var(--text-rgb) / 0.08);
   cursor: pointer;
   transition: background 0.2s;
 }
 .icon-btn:hover {
-  background: rgb(244 235 221 / 0.16);
+  background: rgb(var(--text-rgb) / 0.16);
 }
 
 /* ------------------------------------------------------------- cards --- */
 .card {
-  background: var(--ink-2);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-l);
   padding: 28px;
@@ -251,10 +296,10 @@ button {
   gap: 8px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgb(244 235 221 / 0.07);
+  background: rgb(var(--text-rgb) / 0.07);
   border: 1px solid var(--line);
   font-size: 14px;
-  color: var(--cream-2);
+  color: var(--text-2);
 }
 
 .dot {
@@ -266,11 +311,11 @@ button {
 }
 .dot--a {
   background: var(--a);
-  box-shadow: 0 0 12px var(--a);
+  box-shadow: 0 0 0 3px var(--a-soft);
 }
 .dot--b {
   background: var(--b);
-  box-shadow: 0 0 12px var(--b);
+  box-shadow: 0 0 0 3px var(--b-soft);
 }
 
 /* Segmented control */
@@ -278,7 +323,7 @@ button {
   display: inline-flex;
   padding: 4px;
   border-radius: 999px;
-  background: var(--ink-3);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   gap: 2px;
 }
@@ -289,15 +334,15 @@ button {
   border-radius: 999px;
   cursor: pointer;
   font-size: 14px;
-  color: var(--cream-2);
+  color: var(--text-2);
   min-height: 36px;
   display: inline-flex;
   align-items: center;
   gap: 7px;
 }
 .seg button[aria-pressed='true'] {
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--text);
+  color: var(--bg);
   font-weight: 600;
 }
 .seg button[aria-pressed='true'] .dot {
@@ -308,8 +353,8 @@ input[type='text'],
 input[type='password'],
 select {
   font: inherit;
-  color: var(--cream);
-  background: var(--ink-3);
+  color: var(--text);
+  background: var(--surface-2);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-s);
   padding: 10px 14px;

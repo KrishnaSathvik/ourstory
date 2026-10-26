@@ -7,7 +7,7 @@
   max-width: 14ch;
 }
 .privacy__title em {
-  color: var(--cream-2);
+  color: var(--text-2);
 }
 .privacy__grid {
   display: grid;
@@ -45,7 +45,7 @@
   margin: 0;
   display: grid;
   gap: 12px;
-  color: var(--cream-2);
+  color: var(--text-2);
   font-size: 15px;
 }
 .privacy__facts li {
@@ -59,7 +59,7 @@
 }
 .privacy__facts code {
   font-size: 0.85em;
-  background: var(--ink-3);
+  background: var(--surface-2);
   padding: 1px 5px;
   border-radius: 5px;
 }

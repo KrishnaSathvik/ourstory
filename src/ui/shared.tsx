@@ -95,7 +95,11 @@ export function Orbs({ intensity = 1, className = '' }: { intensity?: number; cl
 
     type P = { x: number; y: number; vx: number; vy: number; life: number; c: string }
     const particles: P[] = []
-    const colors = ['255,122,89', '140,155,255']
+    // Theme colours come from CSS tokens so the canvas follows the design system.
+    const css = getComputedStyle(document.documentElement)
+    const channel = (name: string, fallback: string) => (css.getPropertyValue(name).trim() || fallback).split(/\s+/).join(',')
+    const colors = [channel('--a-rgb', '226 96 63'), channel('--b-rgb', '122 120 230')]
+    const flecks = [channel('--a-ink-rgb', '180 67 42'), channel('--b-ink-rgb', '85 82 196')]
     const draw = (time: number) => {
       const w = canvas.width
       const h = canvas.height
@@ -107,22 +111,22 @@ export function Orbs({ intensity = 1, className = '' }: { intensity?: number; cl
       const bodies = [0, 1].map((i) => {
         const ang = t * 0.35 + i * Math.PI
         const ecc = 1 + 0.18 * Math.sin(t * 0.21)
-        return { x: cx + Math.cos(ang) * R * 1.35 * ecc, y: cy + Math.sin(ang) * R * 0.75, c: colors[i] }
+        return { x: cx + Math.cos(ang) * R * 1.35 * ecc, y: cy + Math.sin(ang) * R * 0.75, c: colors[i], f: flecks[i] }
       })
-      ctx.globalCompositeOperation = 'lighter'
+      // Watercolour on paper: soft washes (the canvas itself multiplies onto the page).
       for (const b of bodies) {
         const rad = Math.min(w, h) * 0.32
         const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, rad)
-        g.addColorStop(0, `rgba(${b.c},${0.55 * intensity})`)
-        g.addColorStop(0.35, `rgba(${b.c},${0.18 * intensity})`)
+        g.addColorStop(0, `rgba(${b.c},${0.38 * intensity})`)
+        g.addColorStop(0.4, `rgba(${b.c},${0.13 * intensity})`)
         g.addColorStop(1, `rgba(${b.c},0)`)
         ctx.fillStyle = g
         ctx.fillRect(0, 0, w, h)
         if (!reduced && particles.length < 160 && Math.random() < 0.6) {
           const a = Math.random() * Math.PI * 2
-          particles.push({ x: b.x, y: b.y, vx: Math.cos(a) * 0.4 * dpr, vy: Math.sin(a) * 0.4 * dpr, life: 1, c: b.c })
+          particles.push({ x: b.x, y: b.y, vx: Math.cos(a) * 0.4 * dpr, vy: Math.sin(a) * 0.4 * dpr, life: 1, c: b.f })
         }
-        ctx.fillStyle = `rgba(${b.c},0.95)`
+        ctx.fillStyle = `rgba(${b.c},1)`
         ctx.beginPath()
         ctx.arc(b.x, b.y, 5 * dpr, 0, Math.PI * 2)
         ctx.fill()
@@ -136,10 +140,9 @@ export function Orbs({ intensity = 1, className = '' }: { intensity?: number; cl
           particles.splice(i, 1)
           continue
         }
-        ctx.fillStyle = `rgba(${p.c},${p.life * 0.7})`
+        ctx.fillStyle = `rgba(${p.c},${p.life * 0.55})`
         ctx.fillRect(p.x, p.y, 1.6 * dpr, 1.6 * dpr)
       }
-      ctx.globalCompositeOperation = 'source-over'
     }
     const loop = (time: number) => {
       if (visible) draw(time)
@@ -185,13 +188,23 @@ export const Icon = {
 
 /** Platform glyph: a small coloured badge with the platform initial. */
 const PLATFORM_COLORS: Record<string, string> = {
-  whatsapp: '#5ad08a',
-  instagram: '#e9779e',
-  telegram: '#5fb2ec',
-  messenger: '#8d84ff',
-  imessage: '#6fd27f',
-  discord: '#8f97ff',
-  sms: '#c9bfcf',
+  whatsapp: '#5cc98a',
+  instagram: '#ec8bb0',
+  telegram: '#6cb8ea',
+  messenger: '#9690f2',
+  imessage: '#72cf83',
+  discord: '#9aa1f3',
+  sms: '#cfc5d3',
+}
+/** Text-safe (≥4.5:1 on paper) versions, for platform names set in type. */
+const PLATFORM_INK: Record<string, string> = {
+  whatsapp: '#1d7a47',
+  instagram: '#b23c6c',
+  telegram: '#1d6ea8',
+  messenger: '#5248c9',
+  imessage: '#257a38',
+  discord: '#4a52c4',
+  sms: '#665a6c',
 }
 export function PlatformMark({ platform, size = 22 }: { platform: string; size?: number }) {
   return (
@@ -205,3 +218,4 @@ export function PlatformMark({ platform, size = 22 }: { platform: string; size?:
   )
 }
 export const platformColor = (p: string) => PLATFORM_COLORS[p] ?? '#999'
+export const platformInk = (p: string) => PLATFORM_INK[p] ?? 'var(--text-2)'

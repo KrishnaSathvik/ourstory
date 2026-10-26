@@ -35,7 +35,8 @@ export interface CardOptions {
   height: number
 }
 
-const pc = (p: PersonId) => (p === 'a' ? K.a : K.b)
+/** Person colour for text (ink variant, legible at small sizes on paper). */
+const pc = (p: PersonId) => (p === 'a' ? K.aInk : K.bInk)
 const pname = (s: Story, p: PersonId) => s.people[p === 'a' ? 0 : 1].name
 const sum = (xs: number[]) => xs.reduce((p, q) => p + q, 0)
 
@@ -46,11 +47,11 @@ function frame(ctx: CanvasRenderingContext2D, _story: Story, o: CardOptions, eye
   ctx.clearRect(0, 0, W, H)
   paintBackground(ctx, W, H, glow)
   const x = 96 * u
-  drawEyebrow(ctx, eyebrow, x, 150 * u, 20 * u, K.cream3)
+  drawEyebrow(ctx, eyebrow, x, 150 * u, 20 * u, K.text3)
   // Title: first part roman, second italic.
   const size = 132 * u
   setFont(ctx, `400 ${size}px ${SERIF}`, -size * 0.01)
-  ctx.fillStyle = K.cream
+  ctx.fillStyle = K.text
   ctx.textAlign = 'left'
   ctx.textBaseline = 'alphabetic'
   const [roman, italic] = title
@@ -71,7 +72,7 @@ function frame(ctx: CanvasRenderingContext2D, _story: Story, o: CardOptions, eye
 function footer(ctx: CanvasRenderingContext2D, story: Story, W: number, H: number, u: number) {
   const fy = H - 96 * u
   ctx.save()
-  ctx.strokeStyle = 'rgba(244,235,221,0.14)'
+  ctx.strokeStyle = 'rgba(43,33,48,0.14)'
   ctx.lineWidth = Math.max(1, u)
   ctx.beginPath()
   ctx.moveTo(96 * u, fy - 70 * u)
@@ -108,10 +109,10 @@ function pairLine(ctx: CanvasRenderingContext2D, story: Story, x: number, y: num
   ctx.textAlign = 'left'
   const total = pair[0] + pair[1] || 1
   const parts: [string, string][] = [
-    [`${pname(story, 'a')} ${fmt(pair[0])}`, K.a],
-    [`  ·  `, K.cream3],
-    [`${pname(story, 'b')} ${fmt(pair[1])}`, K.b],
-    [`   ${Math.round((pair[0] / total) * 100)} / ${100 - Math.round((pair[0] / total) * 100)}`, K.cream3],
+    [`${pname(story, 'a')} ${fmt(pair[0])}`, K.aInk],
+    [`  ·  `, K.text3],
+    [`${pname(story, 'b')} ${fmt(pair[1])}`, K.bInk],
+    [`   ${Math.round((pair[0] / total) * 100)} / ${100 - Math.round((pair[0] / total) * 100)}`, K.text3],
   ]
   let cx = x
   for (const [t, c] of parts) {
@@ -136,7 +137,7 @@ export function drawNumbersCard(ctx: CanvasRenderingContext2D, story: Story, o: 
       label: 'days of us',
       draw: (y) => {
         setFont(ctx, `400 ${26 * u}px ${SANS}`, 0)
-        ctx.fillStyle = K.cream2
+        ctx.fillStyle = K.text2
         ctx.fillText(`${fmtNum(story.activity.activeDays)} of them with at least one message`, x, y + 26 * u)
       },
     },
@@ -146,7 +147,7 @@ export function drawNumbersCard(ctx: CanvasRenderingContext2D, story: Story, o: 
       label: 'day streak',
       draw: (y) => {
         setFont(ctx, `400 ${26 * u}px ${SANS}`, 0)
-        ctx.fillStyle = K.cream2
+        ctx.fillStyle = K.text2
         ctx.fillText(streak.days ? `${fmtShortDate(streak.start)} – ${fmtShortDate(streak.end)}, never a day apart` : 'still to come', x, y + 26 * u)
       },
     },
@@ -157,13 +158,13 @@ export function drawNumbersCard(ctx: CanvasRenderingContext2D, story: Story, o: 
     const y = top + rowH * i + 168 * u
     const size = fitSize(ctx, r.value, inner * 0.72, (s) => `400 ${s}px ${SERIF}`, 172 * u, 90 * u)
     setFont(ctx, `400 ${size}px ${SERIF}`, -size * 0.015)
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text
     ctx.textAlign = 'left'
     ctx.textBaseline = 'alphabetic'
     ctx.fillText(r.value, x - 4 * u, y)
     const vw = ctx.measureText(r.value).width
     setFont(ctx, `italic 400 ${54 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.fillText(r.label, x + vw + 22 * u, y)
     setFont(ctx, ctx.font, 0)
     r.draw?.(y + 40 * u)
@@ -185,7 +186,7 @@ export function drawAwardsCard(ctx: CanvasRenderingContext2D, story: Story, o: C
   const rowH = Math.min(270 * u, avail / Math.max(awards.length, 1))
   if (!awards.length) {
     setFont(ctx, `italic 400 ${56 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.fillText('Awards appear once there is enough to go on.', x, top + 200 * u)
   }
   awards.forEach((a, i) => {
@@ -197,8 +198,8 @@ export function drawAwardsCard(ctx: CanvasRenderingContext2D, story: Story, o: C
     const dcy = y + disc + 8 * u
     // Glowing disc behind the emoji.
     const g = ctx.createRadialGradient(dcx, dcy, 0, dcx, dcy, disc * 1.5)
-    g.addColorStop(0, rgba(rgb, 0.34))
-    g.addColorStop(0.6, rgba(rgb, 0.1))
+    g.addColorStop(0, rgba(rgb, 0.2))
+    g.addColorStop(0.6, rgba(rgb, 0.07))
     g.addColorStop(1, rgba(rgb, 0))
     ctx.fillStyle = g
     ctx.fillRect(dcx - disc * 1.6, dcy - disc * 1.6, disc * 3.2, disc * 3.2)
@@ -210,7 +211,7 @@ export function drawAwardsCard(ctx: CanvasRenderingContext2D, story: Story, o: C
     ctx.font = `${62 * u}px ${EMOJI}`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text
     ctx.fillText(a.emoji || '★', dcx, dcy + 4 * u)
 
     const tx = x + disc * 2 + 40 * u
@@ -219,7 +220,7 @@ export function drawAwardsCard(ctx: CanvasRenderingContext2D, story: Story, o: C
     ctx.textBaseline = 'alphabetic'
     const ts = fitSize(ctx, a.title, tw, (s) => `400 ${s}px ${SERIF}`, 62 * u, 36 * u)
     setFont(ctx, `400 ${ts}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text
     ctx.fillText(a.title, tx, y + 54 * u)
     setFont(ctx, `700 ${30 * u}px ${SANS}`, 0.3 * u)
     ctx.fillStyle = c
@@ -227,10 +228,10 @@ export function drawAwardsCard(ctx: CanvasRenderingContext2D, story: Story, o: C
     ctx.fillText(name, tx, y + 102 * u)
     const nw = ctx.measureText(name).width
     setFont(ctx, `500 ${30 * u}px ${SANS}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     if (a.stat) ctx.fillText(`  ·  ${a.stat}`, tx + nw, y + 102 * u)
     setFont(ctx, `400 ${24 * u}px ${SANS}`, 0)
-    ctx.fillStyle = K.cream3
+    ctx.fillStyle = K.text3
     wrapLines(ctx, a.detail, tw, 2).forEach((line, li) => ctx.fillText(line, tx, y + 146 * u + li * 32 * u))
   })
   footer(ctx, story, W, H, u)
@@ -266,7 +267,7 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
 
   // Rings + hour ticks.
   ctx.save()
-  ctx.strokeStyle = 'rgba(244,235,221,0.08)'
+  ctx.strokeStyle = 'rgba(43,33,48,0.08)'
   ctx.lineWidth = Math.max(1, u)
   for (const f of [0, 0.5, 1]) {
     ctx.beginPath()
@@ -275,7 +276,7 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
   }
   for (let h = 0; h < 24; h++) {
     const a = -Math.PI / 2 + h * step
-    ctx.strokeStyle = h % 6 === 0 ? 'rgba(244,235,221,0.3)' : 'rgba(244,235,221,0.1)'
+    ctx.strokeStyle = h % 6 === 0 ? 'rgba(43,33,48,0.3)' : 'rgba(43,33,48,0.1)'
     ctx.beginPath()
     ctx.moveTo(cx + Math.cos(a) * (r0 - 10 * u), cy + Math.sin(a) * (r0 - 10 * u))
     ctx.lineTo(cx + Math.cos(a) * (r1 + (h % 6 === 0 ? 22 : 10) * u), cy + Math.sin(a) * (r1 + (h % 6 === 0 ? 22 : 10) * u))
@@ -285,7 +286,7 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
 
   // Night arc (midnight–5am) as a faint gold band.
   ctx.save()
-  ctx.strokeStyle = 'rgba(242,196,109,0.35)'
+  ctx.strokeStyle = 'rgba(168,106,18,0.4)'
   ctx.lineWidth = 4 * u
   ctx.lineCap = 'round'
   ctx.beginPath()
@@ -314,9 +315,9 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
   ctx.save()
   ctx.shadowBlur = 24 * u
   for (let h = 0; h < 24; h++) {
-    ctx.shadowColor = 'rgba(255,122,89,0.55)'
+    ctx.shadowColor = 'rgba(226,96,63,0.28)'
     petal(h, 0, ha[h], K.a, duetColor(0))
-    ctx.shadowColor = 'rgba(140,155,255,0.55)'
+    ctx.shadowColor = 'rgba(122,120,230,0.3)'
     petal(h, 1, hb[h], K.b, duetColor(1))
   }
   ctx.restore()
@@ -324,7 +325,7 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
   // Hour labels.
   ctx.save()
   setFont(ctx, `600 ${22 * u}px ${SANS}`, 1.5 * u)
-  ctx.fillStyle = K.cream2
+  ctx.fillStyle = K.text2
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   const labels: [number, string][] = [
@@ -345,9 +346,9 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
   ctx.textAlign = 'center'
   ctx.textBaseline = 'alphabetic'
   setFont(ctx, `400 ${84 * u}px ${SERIF}`, 0)
-  ctx.fillStyle = K.cream
+  ctx.fillStyle = K.text
   ctx.fillText(fmtHour(story.activity.peakHour), cx, cy + 18 * u)
-  drawEyebrow(ctx, 'our hour', cx, cy + 62 * u, 17 * u, K.cream3, 'center')
+  drawEyebrow(ctx, 'our hour', cx, cy + 62 * u, 17 * u, K.text3, 'center')
   ctx.restore()
 
   // Facts under the clock.
@@ -361,18 +362,18 @@ export function drawHoursCard(ctx: CanvasRenderingContext2D, story: Story, o: Ca
     const fx = x + col * i
     drawEyebrow(ctx, `${shortName(pname(story, p), 14)}’s hour`, fx, fy, 19 * u, pc(p))
     setFont(ctx, `400 ${78 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text
     ctx.textAlign = 'left'
     ctx.fillText(hour, fx, fy + 82 * u)
     setFont(ctx, `400 ${25 * u}px ${SANS}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.fillText(night, fx, fy + 126 * u)
   })
   // Tiny key.
   ctx.save()
   const ky = fy + 200 * u
   setFont(ctx, `400 ${22 * u}px ${SANS}`, 0)
-  ctx.fillStyle = K.cream3
+  ctx.fillStyle = K.text3
   ctx.textAlign = 'left'
   ctx.fillText('petal length = messages in that hour, all days combined', x, ky)
   ctx.restore()
@@ -431,11 +432,11 @@ export function drawChaptersCard(ctx: CanvasRenderingContext2D, story: Story, o:
     // Node.
     ctx.save()
     const g = ctx.createRadialGradient(lineX, y, 0, lineX, y, 28 * u)
-    g.addColorStop(0, rgba(rgb, 0.7))
+    g.addColorStop(0, rgba(rgb, 0.35))
     g.addColorStop(1, rgba(rgb, 0))
     ctx.fillStyle = g
     ctx.fillRect(lineX - 28 * u, y - 28 * u, 56 * u, 56 * u)
-    ctx.fillStyle = K.ink
+    ctx.fillStyle = K.paper
     ctx.strokeStyle = rgba(rgb, 1)
     ctx.lineWidth = 3 * u
     ctx.beginPath()
@@ -446,11 +447,11 @@ export function drawChaptersCard(ctx: CanvasRenderingContext2D, story: Story, o:
 
     const tx = x + 70 * u
     const tw = inner - 70 * u
-    drawEyebrow(ctx, c.label, tx, y + 8 * u, 20 * u, K.cream2)
+    drawEyebrow(ctx, c.label, tx, y + 8 * u, 20 * u, K.text2)
     ctx.textAlign = 'left'
     ctx.textBaseline = 'alphabetic'
     setFont(ctx, `400 ${56 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream
+    ctx.fillStyle = K.text
     const lines = wrapLines(ctx, c.theme, tw - (c.topEmoji ? 80 * u : 0), rowH > 250 * u ? 2 : 1)
     lines.forEach((l, li) => ctx.fillText(l, tx, y + 68 * u + li * 58 * u))
     if (c.topEmoji) {
@@ -463,19 +464,19 @@ export function drawChaptersCard(ctx: CanvasRenderingContext2D, story: Story, o:
     const bw = Math.max(24 * u, tw * 0.62 * (c.messages / maxMsgs))
     splitBar(ctx, tx, by, bw, 8 * u, c.byPerson, u)
     setFont(ctx, `500 ${24 * u}px ${SANS}`, 0)
-    ctx.fillStyle = K.cream3
+    ctx.fillStyle = K.text3
     ctx.fillText(`${fmtNum(c.messages)} messages`, tx + bw + 18 * u, by + 9 * u)
     // App-written detail line(s), as space allows.
     const room = Math.floor((y + rowH - 60 * u - (by + 52 * u)) / (32 * u)) + 1
     if (room > 0 && c.themeDetail) {
       setFont(ctx, `400 ${24 * u}px ${SANS}`, 0)
-      ctx.fillStyle = K.cream3
+      ctx.fillStyle = K.text3
       wrapLines(ctx, c.themeDetail, tw, Math.min(2, room)).forEach((l, li) => ctx.fillText(l, tx, by + 52 * u + li * 32 * u))
     }
   })
   if (!chapters.length) {
     setFont(ctx, `italic 400 ${56 * u}px ${SERIF}`, 0)
-    ctx.fillStyle = K.cream2
+    ctx.fillStyle = K.text2
     ctx.fillText('Your first chapter is still being written.', x, top + 200 * u)
   }
   footer(ctx, story, W, H, u)

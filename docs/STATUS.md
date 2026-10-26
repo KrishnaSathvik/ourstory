@@ -14,6 +14,7 @@ _Last updated: 26 Oct 2026, v0.1.0_
 - [x] Encrypted vault, validated and redactable story files
 - [x] Production CSP (`connect-src 'none'`), offline-capable flow
 - [x] Synthetic demo couple through the real pipeline; landing copy verified against it
+- [x] Light "Paper & Ink" theme (default): role-based token system, per-scene story papers, watercolour orbs, paper keepsakes; all text roles WCAG AA (see `DESIGN.md`)
 
 ## Tests
 

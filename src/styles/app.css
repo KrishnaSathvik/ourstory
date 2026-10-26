@@ -18,7 +18,7 @@
 }
 .wordmark__dots .dot--b {
   margin-left: -0.16em;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
 }
 
 .loading-screen {
@@ -50,7 +50,7 @@
   line-height: 1;
 }
 .building__title em {
-  color: var(--cream-2);
+  color: var(--text-2);
 }
 .building__steps {
   list-style: none;
@@ -60,13 +60,13 @@
   gap: 6px;
   min-height: 190px;
   font-size: 16px;
-  color: var(--cream-3);
+  color: var(--text-3);
 }
 .building__steps li {
   animation: rise 0.5s var(--ease) both;
 }
 .building__steps li.is-current {
-  color: var(--cream);
+  color: var(--text);
 }
 .building__fine {
   font-size: 13px;
@@ -89,7 +89,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgb(15 11 20 / 0.78);
+  background: rgb(var(--surface-rgb) / 0.98);
   backdrop-filter: blur(16px) saturate(1.2);
   border-bottom: 1px solid var(--line);
 }
@@ -112,16 +112,16 @@
   padding: 8px 14px;
   border-radius: 999px;
   cursor: pointer;
-  color: var(--cream-2);
+  color: var(--text-2);
   font-size: 15px;
   white-space: nowrap;
 }
 .home__tab:hover {
-  color: var(--cream);
+  color: var(--text);
 }
 .home__tab[aria-current='page'] {
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--text);
+  color: var(--bg);
   font-weight: 600;
 }
 @media (max-width: 720px) {

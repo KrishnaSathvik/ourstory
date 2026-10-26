@@ -10,9 +10,9 @@ import { useReducedMotion } from '../shared'
  * JS mirrors of the person tokens (--a, the blend midpoint, --b). Charts that
  * colour individual marks by share need real numbers to interpolate.
  */
-const A_RGB: [number, number, number] = [255, 122, 89]
-const MID_RGB: [number, number, number] = [229, 143, 192]
-const B_RGB: [number, number, number] = [140, 155, 255]
+const A_RGB: [number, number, number] = [226, 96, 63]
+const MID_RGB: [number, number, number] = [212, 112, 154]
+const B_RGB: [number, number, number] = [122, 120, 230]
 
 const lerp = (x: number, y: number, t: number) => x + (y - x) * t
 

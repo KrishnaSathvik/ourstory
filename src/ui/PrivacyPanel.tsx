@@ -52,16 +52,20 @@ export function PrivacyPanel({ story, hiddenWords, onUnhideWord, onForget }: Pro
           </h2>
           <ul className="privacy__facts">
             <li>
-              <Icon.check /> Your messages are gone. The worker that read them was shut down when your story was ready.
+              <Icon.check />
+              <span>Your messages are gone. The worker that read them was shut down when your story was ready.</span>
             </li>
             <li>
-              <Icon.check /> Your story (numbers, dates, emoji and a few frequent words) is held in this tab’s memory only.
+              <Icon.check />
+              <span>Your story (numbers, dates, emoji and a few frequent words) is held in this tab’s memory only.</span>
             </li>
             <li>
-              <Icon.check /> {saved ? 'An encrypted copy of your story is saved on this device.' : 'Nothing is saved on this device. Close the tab and it’s gone.'}
+              <Icon.check />
+              <span>{saved ? 'An encrypted copy of your story is saved on this device.' : 'Nothing is saved on this device. Close the tab and it’s gone.'}</span>
             </li>
             <li>
-              <Icon.check /> This page can’t make network connections (Content-Security-Policy <code>connect-src 'none'</code>). There’s no Duet server.
+              <Icon.check />
+              <span>This page can’t make network connections (Content-Security-Policy <code>connect-src 'none'</code>). There’s no Duet server.</span>
             </li>
           </ul>
         </section>
