@@ -1,0 +1,147 @@
+/* App shell: wordmark, loading, building, home navigation. */
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28em;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+.wordmark__dots {
+  display: inline-flex;
+  gap: 0;
+}
+.wordmark__dots .dot {
+  width: 0.42em;
+  height: 0.42em;
+}
+.wordmark__dots .dot--b {
+  margin-left: -0.16em;
+  mix-blend-mode: screen;
+}
+
+.loading-screen {
+  min-height: 60vh;
+}
+
+/* ------------------------------------------------------------ building */
+.building {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  isolation: isolate;
+  padding: 24px;
+}
+.building .orbs {
+  z-index: -1;
+}
+.building__text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  max-width: 520px;
+}
+.building__title {
+  font-size: clamp(40px, 8vw, 72px);
+  line-height: 1;
+}
+.building__title em {
+  color: var(--cream-2);
+}
+.building__steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  min-height: 190px;
+  font-size: 16px;
+  color: var(--cream-3);
+}
+.building__steps li {
+  animation: rise 0.5s var(--ease) both;
+}
+.building__steps li.is-current {
+  color: var(--cream);
+}
+.building__fine {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* ---------------------------------------------------------------- home */
+.home {
+  min-height: 100dvh;
+  padding-bottom: 80px;
+}
+.home__bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(15 11 20 / 0.78);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+}
+.home__barinner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 64px;
+}
+.home__tabs {
+  display: flex;
+  gap: 4px;
+  margin-inline: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.home__tab {
+  border: 0;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--cream-2);
+  font-size: 15px;
+  white-space: nowrap;
+}
+.home__tab:hover {
+  color: var(--cream);
+}
+.home__tab[aria-current='page'] {
+  background: var(--cream);
+  color: var(--ink);
+  font-weight: 600;
+}
+@media (max-width: 720px) {
+  .home__barinner {
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    padding-block: 10px;
+  }
+  .home__tabs {
+    order: 3;
+    width: 100%;
+    margin: 0;
+  }
+  .home__replay {
+    margin-left: auto;
+  }
+  .home__replay span {
+    display: none;
+  }
+}
+.home__main {
+  padding-top: 40px;
+}

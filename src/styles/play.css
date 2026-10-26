@@ -1,0 +1,220 @@
+.play {
+  max-width: 820px;
+  padding-block: 20px 60px;
+}
+.play__title {
+  font-size: clamp(44px, 7vw, 84px);
+  margin-block: 12px 18px;
+  text-wrap: balance;
+}
+.play__title em {
+  color: var(--cream-2);
+}
+.play__lead {
+  max-width: 540px;
+  margin-bottom: 34px;
+}
+.play__modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.mode {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.2s;
+}
+.mode:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+}
+.mode__art {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.mode__art .dot {
+  width: 22px;
+  height: 22px;
+}
+.mode__title {
+  font-size: 34px;
+}
+.mode__go {
+  margin-top: auto;
+  padding-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.qhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.qhead__who--a {
+  border-color: rgb(255 122 89 / 0.5);
+}
+.qhead__who--b {
+  border-color: rgb(140 155 255 / 0.5);
+}
+.play__q {
+  font-size: clamp(34px, 6vw, 58px);
+  margin-block: 18px 30px;
+  text-wrap: balance;
+  line-height: 1.05;
+}
+.qopts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 520px) {
+  .qopts:not(.qopts--two) {
+    grid-template-columns: 1fr;
+  }
+}
+.qopt {
+  position: relative;
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-radius: var(--r-l);
+  border: 1px solid var(--line-strong);
+  background: var(--ink-2);
+  cursor: pointer;
+  text-align: left;
+  font-size: 19px;
+  font-weight: 600;
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.2s,
+    background 0.2s,
+    opacity 0.3s;
+}
+.qopts--two .qopt {
+  min-height: 130px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 6vw, 44px);
+}
+.qopt:not([disabled]):hover {
+  transform: translateY(-2px);
+  border-color: var(--cream);
+}
+.qopt--a:not([disabled]):hover {
+  background: var(--a-soft);
+  border-color: var(--a);
+}
+.qopt--b:not([disabled]):hover {
+  background: var(--b-soft);
+  border-color: var(--b);
+}
+.qopt[disabled] {
+  cursor: default;
+}
+.qopt.is-right {
+  border-color: var(--gold);
+  background: rgb(242 196 109 / 0.12);
+}
+.qopt.is-right svg {
+  color: var(--gold);
+}
+.qopt.is-wrong {
+  border-color: rgb(255 143 143 / 0.5);
+}
+.qopt.is-dim {
+  opacity: 0.4;
+}
+.qopt__by {
+  display: flex;
+  gap: 6px;
+  font-family: var(--sans);
+}
+.qopt__tag {
+  font-size: 12px;
+  padding: 3px 9px;
+}
+.qopt__tag--a {
+  color: var(--a);
+  border-color: rgb(255 122 89 / 0.5);
+}
+.qopt__tag--b {
+  color: var(--b);
+  border-color: rgb(140 155 255 / 0.5);
+}
+.qreveal {
+  margin-top: 26px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px 22px;
+  border-radius: var(--r-l);
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  animation: rise 0.5s var(--ease) both;
+}
+.qreveal__text {
+  font-size: 18px;
+  max-width: 46ch;
+}
+
+.handoff {
+  min-height: 56vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 40px;
+  border-radius: var(--r-l);
+  border: 1px solid var(--line);
+}
+.handoff--a {
+  background: radial-gradient(ellipse at 0% 100%, rgb(255 122 89 / 0.22), transparent 60%), var(--ink-2);
+}
+.handoff--b {
+  background: radial-gradient(ellipse at 100% 100%, rgb(140 155 255 / 0.24), transparent 60%), var(--ink-2);
+}
+
+.scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+.score {
+  padding: 24px;
+  border-radius: var(--r-l);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+.score--a .score__n {
+  color: var(--a);
+}
+.score--b .score__n {
+  color: var(--b);
+}
+.score.is-best {
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.score__n {
+  font-size: 88px;
+  line-height: 1;
+}

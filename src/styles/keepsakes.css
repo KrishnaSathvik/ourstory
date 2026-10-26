@@ -1,0 +1,198 @@
+/* Keepsakes gallery (src/ui/keepsakes/Keepsakes.tsx). */
+
+.keepsakes {
+  --gap: 28px;
+}
+
+.keepsakes__header {
+  --gap: 12px;
+  max-width: 720px;
+}
+.keepsakes__heading {
+  font-size: clamp(40px, 7vw, 68px);
+}
+.keepsakes__lede {
+  font-size: 18px;
+}
+
+.keepsakes__grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  align-items: start;
+}
+
+.keepsake.card {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.keepsake__frame {
+  position: relative;
+  width: 100%;
+  border-radius: calc(var(--r-l) - 10px);
+  overflow: hidden;
+  background: var(--ink);
+  box-shadow:
+    0 0 0 1px var(--line),
+    var(--shadow);
+}
+/* Skeleton shimmer until the first paint. */
+.keepsake__frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgb(244 235 221 / 0.05) 50%, transparent 70%) var(--ink-2);
+  background-size: 250% 100%;
+  animation: keepsake-shimmer 1.6s linear infinite;
+  transition: opacity 0.4s var(--ease);
+}
+.keepsake__frame[data-ready='true']::before {
+  opacity: 0;
+  animation: none;
+}
+@keyframes keepsake-shimmer {
+  to {
+    background-position: -150% 0;
+  }
+}
+
+.keepsake__canvas {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+.keepsake__frame[data-ready='true'] .keepsake__canvas {
+  opacity: 1;
+}
+
+.keepsake__body {
+  --gap: 12px;
+  padding: 2px 8px 6px;
+}
+.keepsake__title {
+  font-size: 30px;
+}
+.keepsake__blurb {
+  font-size: 15px;
+  margin-top: 4px;
+}
+.keepsake .seg {
+  align-self: flex-start;
+}
+.keepsake__meta {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.keepsake__actions {
+  --gap: 10px;
+}
+.keepsake__status,
+.storyfile__status {
+  font-size: 14px;
+  color: var(--cream-2);
+  min-height: 1.4em;
+}
+.storyfile__status.is-error {
+  color: var(--danger);
+}
+
+/* Story file panel */
+.storyfile.card {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--a-soft), transparent 55%),
+    radial-gradient(120% 140% at 100% 100%, var(--b-soft), transparent 55%),
+    var(--ink-2);
+}
+.storyfile__intro {
+  --gap: 10px;
+}
+.storyfile__title {
+  font-size: clamp(34px, 5vw, 48px);
+}
+.storyfile__form {
+  --gap: 14px;
+}
+.storyfile__pass {
+  --gap: 6px;
+}
+.storyfile__pass input {
+  width: 100%;
+  max-width: 420px;
+}
+.storyfile__hint {
+  font-size: 14px;
+}
+
+.check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--r-m);
+  border: 1px solid var(--line);
+  background: rgb(244 235 221 / 0.03);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.check:hover {
+  border-color: var(--line-strong);
+}
+.check:has(input:focus-visible) {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.check input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--a);
+  cursor: pointer;
+}
+.check > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.check .faint {
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .storyfile.card {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+}
+
+@media (max-width: 420px) {
+  .keepsakes {
+    --gap: 22px;
+  }
+  .keepsake__actions .btn {
+    flex: 1 1 auto;
+  }
+  .storyfile .btn {
+    width: 100%;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keepsake__frame::before {
+    animation: none;
+  }
+  .keepsake__canvas {
+    transition: none;
+  }
+}

@@ -1,0 +1,95 @@
+.privacy {
+  padding-bottom: 60px;
+}
+.privacy__title {
+  font-size: clamp(44px, 7vw, 84px);
+  margin-block: 12px 34px;
+  max-width: 14ch;
+}
+.privacy__title em {
+  color: var(--cream-2);
+}
+.privacy__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.privacy__card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+.privacy__card h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 19px;
+  font-weight: 600;
+}
+.privacy__card h2 svg {
+  color: var(--gold);
+}
+.privacy__card .stack {
+  width: 100%;
+}
+.privacy__card input {
+  width: 100%;
+}
+.privacy__card--danger h2 svg {
+  color: var(--danger);
+}
+.privacy__facts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  color: var(--cream-2);
+  font-size: 15px;
+}
+.privacy__facts li {
+  display: flex;
+  gap: 10px;
+}
+.privacy__facts svg {
+  color: var(--ok);
+  flex: none;
+  margin-top: 3px;
+}
+.privacy__facts code {
+  font-size: 0.85em;
+  background: var(--ink-3);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+.privacy__status {
+  color: var(--ok);
+  font-size: 14px;
+}
+.privacy__words {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.privacy__words .pill {
+  cursor: pointer;
+}
+.privacy__words svg {
+  width: 13px;
+}
+.privacy__quality {
+  margin-top: 50px;
+}
+.privacy__quality h2 {
+  font-size: 34px;
+  margin-bottom: 14px;
+}
+.privacy__quality ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 20px;
+}
